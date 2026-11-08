@@ -1,0 +1,37 @@
+# Simpan sebagai: .github/workflows/build-esp32.yml
+# Struktur repo:
+#   esp32_captive_relay_sleep/esp32_captive_relay_sleep.ino
+#   .github/workflows/build-esp32.yml
+# Jalankan dari tab Actions > "Build ESP32" > Run workflow (bisa dari browser HP).
+name: Build ESP32
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: arduino/setup-arduino-cli@v2
+
+      - name: Pasang core ESP32
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+
+      - name: Kompilasi (ESP32 DevKit V1, partisi standar)
+        run: |
+          arduino-cli compile \
+            --fqbn "esp32:esp32:esp32:PartitionScheme=default,FlashFreq=80,FlashMode=qio,FlashSize=4M" \
+            --output-dir build \
+            esp32_captive_relay_sleep
+
+      - name: Tampilkan hasil
+        run: ls -la build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: esp32-merged-bin
+          path: build/*.merged.bin
