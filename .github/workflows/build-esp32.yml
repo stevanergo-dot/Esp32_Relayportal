@@ -26,7 +26,7 @@ jobs:
           arduino-cli compile \
             --fqbn "esp32:esp32:esp32:PartitionScheme=default,FlashFreq=80,FlashMode=qio,FlashSize=4M" \
             --output-dir build \
-            Esp32_Captive_relaysleep
+            Esp32_CaptiveRelaysleep
 
       - name: Tampilkan hasil
         run: ls -la build
